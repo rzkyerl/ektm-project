@@ -25,17 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Login"),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
@@ -101,7 +90,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   'Untuk mahasiswa baru menggunakan password "ubsi2023". '
                   'Standar dan langsung ganti password kamu segera.',
                   style: TextStyle(color: Colors.grey),
-                  textAlign: TextAlign.center,
+                  textAlign: TextAlign.justify,
                 ),
               ],
             ),
