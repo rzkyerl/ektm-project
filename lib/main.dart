@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/pages/home_pages.dart';
-import 'package:flutter_application_1/pages/login_pages.dart';
-// import 'package:flutter_application_1/pages/splash_screen.dart';
+import 'package:google_fonts/google_fonts.dart'; // Tambahkan ini
+import 'pages/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,8 +13,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aplikasi Flutter',
-      home: HomePages(),
+      theme: ThemeData(
+        textTheme: GoogleFonts.poppinsTextTheme(), // Gunakan Google Fonts di seluruh app
+        scaffoldBackgroundColor: Colors.white, // Opsional: atur background global
+      ),
+      home: SplashScreen(),
     );
   }
 }

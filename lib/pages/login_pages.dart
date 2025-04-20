@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/components/my_button.dart';
-import 'package:flutter_application_1/components/my_textfield.dart';
-import 'package:flutter_application_1/pages/home_pages.dart';
+import 'package:ektm/components/my_button.dart';
+import 'package:ektm/components/my_textfield.dart';
+import 'package:ektm/pages/ektm_pages/home_pages.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -18,13 +19,26 @@ class _LoginScreenState extends State<LoginScreen> {
   void signIn(BuildContext context) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => HomePages()),
+      MaterialPageRoute(
+        builder: (context) => HomePages(),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Login"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: Center(
         child: SingleChildScrollView(
@@ -34,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Logo
-                Image.asset('assets/logo.png', width: 150),
+                Image.asset('assets/images/logo.png', width: 150),
                 const SizedBox(height: 10),
 
                 // Judul
@@ -46,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 25),
+                const SizedBox(height: 35),
 
                 // Input NIM
                 MyTextfield(
@@ -82,15 +96,26 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 25),
 
                 // Tombol Login
-                MyButton(onTap: () => signIn(context), text: 'Login'),
+                MyButton(
+                  onTap: () => signIn(context),
+                  text: 'Login',
+                ),
                 const SizedBox(height: 20),
 
                 // Informasi untuk mahasiswa baru
-                const Text(
-                  'Untuk mahasiswa baru menggunakan password "ubsi2023". '
-                  'Standar dan langsung ganti password kamu segera.',
-                  style: TextStyle(color: Colors.grey),
-                  textAlign: TextAlign.justify,
+                RichText(
+                  textAlign: TextAlign.center,
+                  text: TextSpan(
+                    style: TextStyle(color: const Color.fromARGB(255, 36, 36, 36), fontSize: 10),
+                    children: [
+                      TextSpan(text: 'Untuk mahasiswa baru menggunakan password '),
+                      TextSpan(
+                        text: '"ubsi2023"',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: '. Standar dan langsung ganti password kamu segera.'),
+                    ],
+                  ),
                 ),
               ],
             ),
