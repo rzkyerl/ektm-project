@@ -82,11 +82,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     children: const [
                       Text(
                         "Selamat Datang 👋",
-                        style: TextStyle(fontSize: 12, color: Colors.black54),
+                        style: TextStyle(fontSize: 10, color: Colors.black54),
                       ),
                       Text(
                         "Di Universitas Bina Sarana Informatika",
-                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ],
                   ),

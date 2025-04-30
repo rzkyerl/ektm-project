@@ -1,12 +1,14 @@
+import 'package:ektm/pages/berita_pages/berita_pages.dart';
+import 'package:ektm/pages/info_bayar_pages/info_bayar_pages.dart';
+import 'package:ektm/pages/profile_pages/profile_pages.dart';
+import 'package:ektm/pages/ektm_pages/scanner_pages.dart';
 import 'package:flutter/material.dart';
-// ignore: unused_import, unnecessary_import
-import 'package:flutter/foundation.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
-import 'qr_scanner_pages.dart';
+import 'package:iconify_flutter/icons/bx.dart';
 import 'notification_pages.dart';
-
+import 'package:url_launcher/url_launcher.dart';
 
 class HomePages extends StatefulWidget {
   const HomePages({super.key});
@@ -18,6 +20,14 @@ class HomePages extends StatefulWidget {
 class _HomePagesState extends State<HomePages> {
   int _selectedIndex = 0;
 
+  // final List<Widget> _pages = [
+  //   HomePages(),
+  //   InfoBayarPages(),
+  //   BeritaPages(),
+  //   ProfilePages(),
+  // ];
+
+  // ignore: unused_element
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -28,79 +38,65 @@ class _HomePagesState extends State<HomePages> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Aksi Scan QR
-        },
-        backgroundColor: const Color(0xFF1E69DD),
-        shape: const CircleBorder(),
-        child: const Iconify(
-          Mdi.line_scan,
-          size: 28,
-          color: Colors.white,
-        ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
-        color: Colors.black,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                onTap: () => _onItemTapped(0),
-                child: _navItem(
-                  const Iconify(MaterialSymbols.co_present_outline, color: Colors.white),
-                  'E-KTM',
-                  _selectedIndex == 0,
+      extendBodyBehindAppBar: true,
+
+      // 1. APP BAR - POSISI PALING ATAS
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        toolbarHeight: 45,
+        flexibleSpace: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // IconButton: Support Agent
+                IconButton(
+                  icon: const Iconify(
+                    MaterialSymbols.support_agent_rounded,
+                    color: Colors.white,
+                  ),
+                  onPressed: () async {
+                    debugPrint("Support Agent diklik");
+                    const phoneNumber = '62895395295511'; // Nomor WhatsApp admin (tanpa +)
+                    final message = Uri.encodeComponent("Halo Admin, izin bertanya...");
+                    final url = Uri.parse("https://wa.me/$phoneNumber?text=$message");
+
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                    } else {
+                      throw 'Tidak bisa membuka WhatsApp';
+                    }
+                  },
                 ),
-              ),
-              GestureDetector(
-                onTap: () => _onItemTapped(1),
-                child: _navItem(
-                  const Iconify(MaterialSymbols.payments_outline_sharp, color: Colors.white),
-                  'Info Bayar',
-                  _selectedIndex == 1,
-                ),
-              ),
-              const SizedBox(width: 40),
-              GestureDetector(
-                onTap: () => _onItemTapped(2),
-                child: _navItem(
-                  const Iconify(MaterialSymbols.receipt_long_outline, color: Colors.white),
-                  'Berita',
-                  _selectedIndex == 2,
-                ),
-              ),
-              GestureDetector(
-                onTap: () => _onItemTapped(3),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const CircleAvatar(
-                      radius: 12,
-                      backgroundImage: AssetImage("assets/images/profile.png"),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      'Profile',
-                      style: TextStyle(
-                        color: _selectedIndex == 3 ? Colors.blue : Colors.grey[300],
-                        fontSize: 12,
+
+                // IconButton: Notifikasi
+                IconButton(
+                  icon: const Iconify(
+                    MaterialSymbols.notifications,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    debugPrint("Notifikasi diklik");
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationPages(),
                       ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
+      // 2 & 3. BACKGROUND + E-KTM CARD
       body: Stack(
         children: [
+          // 2. BACKGROUND CLIP
           Positioned(
             top: 0,
             right: 0,
@@ -108,17 +104,33 @@ class _HomePagesState extends State<HomePages> {
             child: ClipPath(
               clipper: BgClipper(),
               child: Container(
-                width: 430,
-                height: 279,
-                color: const Color.fromARGB(255, 89, 169, 235),
+                width: 366,
+                height: 498,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xFF75ABFF), // Warna biru
+                      const Color.fromARGB(
+                        0,
+                        89,
+                        169,
+                        235,
+                      ), // Pudar (transparan)
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
-          // Konten utama, beri jarak dari atas (biar ga tabrakan dengan AppBar)
+
+          // 3. ISI E-KTM + BADGE
           Positioned.fill(
-            top: 45,
+            top: 0,
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.fromLTRB(20, 90, 20, 30),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -145,24 +157,21 @@ class _HomePagesState extends State<HomePages> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 35),
                   Stack(
                     children: [
                       Container(
-                        width: double.infinity,
+                        width: 466,
+                        height: 181,
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           image: const DecorationImage(
-                            image: AssetImage("assets/images/logo_bg.png"),
-                            fit: BoxFit.cover,
-                            opacity: 0.2,
+                            image: AssetImage("assets/images/card_bg.png"),
+                            fit: BoxFit.fill,
                           ),
                           borderRadius: BorderRadius.circular(18),
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF57D4D4),
-                              Color(0xFF1E69DD),
-                            ],
+                            colors: [Color(0xFF57D4D4), Color(0xFF1E69DD)],
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                           ),
@@ -170,10 +179,8 @@ class _HomePagesState extends State<HomePages> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset('assets/images/logo_bsi.png', width: 50),
-                            const SizedBox(height: 15),
                             const Text(
-                              'Nihat Hasaanto',
+                              'Nihat Hasananto',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
@@ -187,7 +194,7 @@ class _HomePagesState extends State<HomePages> {
                                 fontSize: 12,
                               ),
                             ),
-                            const SizedBox(height: 25),
+                            const Spacer(),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -212,6 +219,7 @@ class _HomePagesState extends State<HomePages> {
                           ],
                         ),
                       ),
+
                       Positioned(
                         top: 0,
                         right: 0,
@@ -246,63 +254,763 @@ class _HomePagesState extends State<HomePages> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Kegiatan Perkuliahan',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Icon(
+                        Icons.arrow_right_alt,
+                        color: Colors.black,
+                        size: 30,
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 15),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        // CAROUSEL 1
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(12),
+                          width: 212,
+                          height: 85,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/Rectangle.png"),
+                              fit: BoxFit.fill,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Padding(padding: EdgeInsets.only(left: 25)),
+                              Text(
+                                'jadwal Perkuliahan',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.lightbulb,
+                                        size: 14,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        'Semester 4',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xFF1E69DD),
+                                          Color(0xFF57D4D4),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    padding: EdgeInsets.all(4),
+                                    child: Text(
+                                      '6 Hari',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // CAROUSEL 2
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(12),
+                          width: 212,
+                          height: 85,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/Rectangle2.png"),
+                              fit: BoxFit.fill,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Padding(padding: EdgeInsets.only(left: 25)),
+                              Text(
+                                'Kalender Akademik',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.lightbulb,
+                                        size: 14,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        'Universitas BSI',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xFF57D4D4),
+                                          Color(0xFF1E69DD),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    padding: EdgeInsets.all(4),
+                                    child: Text(
+                                      '6 Hari',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // CAROUSEL 3
+                        Container(
+                          margin: EdgeInsets.only(right: 10),
+                          padding: EdgeInsets.all(12),
+                          width: 212,
+                          height: 85,
+                          decoration: BoxDecoration(
+                            image: const DecorationImage(
+                              image: AssetImage("assets/images/Recatngle.png"),
+                              fit: BoxFit.fill,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Padding(padding: EdgeInsets.only(left: 25)),
+                              Text(
+                                'jadwal Perkuliahan',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Spacer(),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.lightbulb,
+                                        size: 14,
+                                        color: Colors.yellow,
+                                      ),
+                                      Text(
+                                        'Semester 4',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xFF1E69DD),
+                                          Color(0xFF57D4D4),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    padding: EdgeInsets.all(4),
+                                    child: Text(
+                                      '6 Hari',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Data Mahasiswa',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [Color(0xFF57D4D4), Color(0xFF1E69DD)],
+                          ),
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit, size: 16, color: Colors.white),
+                            Text(
+                              'Update Data',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Data Personal',
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color((0xFF1E69DD)), Color(0xFF64B5F6)],
+                        begin: Alignment.centerLeft,
+                        end: Alignment.centerRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Nama Lengkap
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(Icons.person, color: Colors.white),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Nama Lengkap",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Nihat Hasannto",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+                        // NIM
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.view_list_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Nomor Induk Mahasiswa",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "19230000",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+                        // Kelas
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.door_front_door,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Kelas",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "19.4A.26",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+                        // Phone
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.phone_android_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Phone",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "087800010001",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+                        // Email
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.email_outlined,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Email",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "nihat12@gmail.com",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  Text(
+                    'Data Akademik',
+                    style: TextStyle(fontSize: 14, color: Colors.black),
+                  ),
+                  SizedBox(height: 5),
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        colors: [Color(0xFF1E69DD), Color(0xFF64B5F6)],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Nama Lengkap
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.developer_board,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Fakultas",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Fakultas Teknik dan Informatika",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+
+                        // Nama Lengkap
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(
+                                Icons.school_rounded,
+                                color: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Jurusan",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "Sistem Informasi",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Divider(color: Colors.white38, thickness: 1),
+                        ),
+
+                        // KAMPUS
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(top: 8),
+                              child: Icon(Icons.pin_drop, color: Colors.white),
+                            ),
+                            SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Kampus",
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
+                                  Text(
+                                    "UBSI Slipi",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
+        ],
+      ),
 
-          // ✅ AppBar di paling atas
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            child: SafeArea(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                height: 45,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // 4. FLOATING SCAN QR BUTTON
+      extendBody: true,  
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,MaterialPageRoute(builder: (context) => ScannerPages()),
+                   );
+        },
+        backgroundColor: const Color(0xFF1E69DD),
+        elevation: 0,
+        shape: const CircleBorder(),
+        child: const Iconify(Mdi.line_scan, size: 28, color: Colors.white),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      // 5. NAVIGASI BAWAH
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        notchMargin: 10,
+        clipBehavior: Clip.antiAlias,
+        color: const Color.fromARGB(255, 24, 24, 24),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              GestureDetector(
+                onTap: () {
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (context) => HomePages()),
+                   );
+                },
+                child: _navItem(
+                  const Iconify(
+                    Bx.bxs_id_card,
+                    color: Color.fromARGB(255, 140, 140, 140),
+                  ),
+                  'E-KTM',
+                  _selectedIndex == 0,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (context) => InfoBayarPages()),
+                   );
+                },
+                child: _navItem(
+                  const Iconify(
+                    MaterialSymbols.payments_outline_sharp,
+                    color: Color.fromARGB(255, 140, 140, 140),
+                  ),
+                  'Info Bayar',
+                  _selectedIndex == 1,
+                ),
+              ),
+              const SizedBox(width: 40),
+              GestureDetector(
+                onTap: () {
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (context) => BeritaPages()),
+                   );
+                },
+                child: _navItem(
+                  const Iconify(
+                    MaterialSymbols.receipt_long_outline,
+                    color: Color.fromARGB(255, 140, 140, 140),
+                  ),
+                  'Berita',
+                  _selectedIndex == 2,
+                ),
+              ),
+              GestureDetector(
+                onTap: () {
+                   Navigator.push(
+                     context,
+                     MaterialPageRoute(builder: (context) => ProfilePages()),
+                   );
+                },
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Builder(
-                      builder: (context) => IconButton(
-                        icon: const Icon(Icons.menu, color: Colors.white),
-                        onPressed: () => Scaffold.of(context).openDrawer(),
-                      ),
+                    const CircleAvatar(
+                      radius: 12,
+                      backgroundImage: AssetImage("assets/images/profile.png"),
                     ),
-                    Row(
-                      children: [
-                        IconButton(
-                          icon: const Iconify(MaterialSymbols.qr_code, color: Colors.white),
-                          onPressed: () async {
-                            final result = await Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const QrScannerPages()),
-                            );
-
-                            if (result != null) {
-                              // Lakukan sesuatu dengan hasil scan
-                              debugPrint("Hasil Scan: $result");
-                            }
-                          },
-                        ),
-                        IconButton(
-                          icon: const Iconify(MaterialSymbols.notifications, color: Colors.white),
-                          onPressed: () {
-                            debugPrint("Notifikasi diklik");
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const NotificationPages()),
-                            );
-                          },
-                        ),
-                      ],
+                    const SizedBox(height: 2),
+                    Text(
+                      'Profile',
+                      style: TextStyle(
+                        color:
+                            _selectedIndex == 3
+                                ? Colors.blue
+                                : Colors.grey[300],
+                        fontSize: 12,
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -312,9 +1020,7 @@ class _HomePagesState extends State<HomePages> {
       mainAxisSize: MainAxisSize.min,
       children: [
         IconTheme(
-          data: IconThemeData(
-            color: isActive ? Colors.blue : Colors.grey[400],
-          ),
+          data: IconThemeData(color: isActive ? Colors.blue : Colors.grey[400]),
           child: icon,
         ),
         Text(
@@ -329,16 +1035,25 @@ class _HomePagesState extends State<HomePages> {
   }
 }
 
-// Background biru clipper
+// 2. Background clip
 class BgClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
+    const double radius = 40;
+
     Path path = Path();
-    path.lineTo(0, size.height - 40);
-    path.quadraticBezierTo(0, size.height, 160, size.height);
-    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height - radius);
+    path.quadraticBezierTo(0, size.height, radius, size.height);
+    path.lineTo(size.width - radius, size.height);
+    path.quadraticBezierTo(
+      size.width,
+      size.height,
+      size.width,
+      size.height - radius,
+    );
     path.lineTo(size.width, 0);
     path.close();
+
     return path;
   }
 
@@ -346,7 +1061,7 @@ class BgClipper extends CustomClipper<Path> {
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
 
-// Badge "Lunas"
+// 3. Badge lunas clip
 class RectangleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {

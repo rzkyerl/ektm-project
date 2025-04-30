@@ -19,11 +19,13 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.flutter_application_1"
+        applicationId = "com.ubsi.ektm"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        multiDexEnabled = true
     }
 
     buildTypes {
