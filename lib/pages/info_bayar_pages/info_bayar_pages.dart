@@ -1,25 +1,12 @@
+import 'package:ektm/pages/ektm_pages/notification_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class InfoBayarPages extends StatelessWidget {
   InfoBayarPages({super.key});
-  
-  final List<Map<String, dynamic>> carouselItems = [
-    {
-      "title": "History Pembayaran",
-      "subtitle": "UBSI",
-      "image": "assets/images/bg1.png",
-      "badge": "8x Pembayaran"
-    },
-    {
-      "title": "Tahapan Pembayaran",
-      "subtitle": "Bank, Indomaret, Alfamart",
-      "image": "assets/images/bg2.png",
-    },
-  ];
 
   final List<Map<String, dynamic>> menuItems = [
     {"label": "Biaya Kuliah", "icon": MaterialSymbols.attach_money},
@@ -28,158 +15,434 @@ class InfoBayarPages extends StatelessWidget {
     {"label": "Kegiatan", "icon": Mdi.run},
     {"label": "Seminar", "icon": Mdi.school},
     {"label": "Bootcamp", "icon": Mdi.laptop},
+    {"label": "Bootcamp", "icon": Mdi.airline_seat_legroom_normal},
+    {"label": "Bootcamp", "icon": Mdi.account_group},
+    {"label": "Bootcamp", "icon": Mdi.access_point_plus},
+    {"label": "Bootcamp", "icon": Mdi.phone},
+    {"label": "Bootcamp", "icon": Mdi.book},
+    {"label": "Bootcamp", "icon": Mdi.abc},
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      body: Stack(
         children: [
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Tentang Info Bayar",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          // Background Gradient
+          ClipPath(
+            clipper: BgClipper(),
+            child: Container(
+              width: double.infinity,
+              height: 580,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0xFF75ABFF), Color.fromARGB(0, 89, 169, 235)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
               ),
-              Icon(Icons.arrow_forward_ios_rounded, size: 16),
-            ],
-          ),
-          const SizedBox(height: 12),
-          
-          // CarouselSlider for items
-          CarouselSlider(
-            options: CarouselOptions(
-              height: 140.0,
-              enlargeCenterPage: true,
-              autoPlay: true,
-              enableInfiniteScroll: true,
-              viewportFraction: 0.85,
             ),
-            items: carouselItems.map((item) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                    width: MediaQuery.of(context).size.width,
-                    margin: const EdgeInsets.symmetric(horizontal: 4.0),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(item['image']),
-                        fit: BoxFit.cover,
-                        colorFilter: ColorFilter.mode(
-                          Colors.black.withAlpha((0.3 * 255).toInt()),
-                          BlendMode.darken,
+          ),
+
+          // Isi Konten
+          SafeArea(
+            child: Column(
+              children: [
+                // AppBar Custom
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        icon: const Iconify(
+                          MaterialSymbols.support_agent_rounded,
+                          color: Colors.white,
                         ),
+                        onPressed: () async {
+                          const phoneNumber = '62895395295511';
+                          final message = Uri.encodeComponent(
+                            "Halo Admin, izin bertanya...",
+                          );
+                          final url = Uri.parse(
+                            "https://wa.me/$phoneNumber?text=$message",
+                          );
+
+                          if (await canLaunchUrl(url)) {
+                            await launchUrl(
+                              url,
+                              mode: LaunchMode.externalApplication,
+                            );
+                          } else {
+                            throw 'Tidak bisa membuka WhatsApp';
+                          }
+                        },
                       ),
-                      borderRadius: BorderRadius.circular(16),
+                      IconButton(
+                        icon: const Iconify(
+                          MaterialSymbols.notifications,
+                          color: Colors.white,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NotificationPages(),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Konten Utama
+                Expanded(
+                  child: ListView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 18,
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
+                    children: [
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
                           Text(
-                            item['title'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
+                            "Tentang Info Bayar",
+                            style: TextStyle(
+                              fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          const SizedBox(height: 4),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                item['subtitle'],
-                                style: const TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              if (item['badge'] != null)
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: Colors.blue,
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  child: Text(
-                                    item['badge'],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ),
-                            ],
-                          ),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 16),
                         ],
                       ),
-                    ),
-                  );
-                },
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: 24),
-          
-          // Menu Pembayaran section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Menu Pembayaran",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Icon(Icons.arrow_forward_ios_rounded, size: 16),
-            ],
-          ),
-          const SizedBox(height: 16),
-          
-          // GridView for menu items
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 3,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            children: menuItems.map((item) {
-              return Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Iconify(
-                      item['icon'],
-                      color: Colors.white,
-                      size: 28,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      item['label'],
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 12,
+                      SizedBox(height: 20),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          children: [
+                            // CAROUSEL 1
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.all(12),
+                              width: 212,
+                              height: 85,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/Rectangle.png",
+                                  ),
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Padding(padding: EdgeInsets.only(left: 25)),
+                                  Text(
+                                    'jadwal Perkuliahan',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.lightbulb,
+                                            size: 14,
+                                            color: Colors.yellow,
+                                          ),
+                                          Text(
+                                            'Semester 4',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            colors: [
+                                              Color(0xFF1E69DD),
+                                              Color(0xFF57D4D4),
+                                            ],
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.all(4),
+                                        child: Text(
+                                          '6 Hari',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // CAROUSEL 2
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.all(12),
+                              width: 212,
+                              height: 85,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/Rectangle2.png",
+                                  ),
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Padding(padding: EdgeInsets.only(left: 25)),
+                                  Text(
+                                    'Kalender Akademik',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.lightbulb,
+                                            size: 14,
+                                            color: Colors.yellow,
+                                          ),
+                                          Text(
+                                            'Universitas BSI',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            colors: [
+                                              Color(0xFF57D4D4),
+                                              Color(0xFF1E69DD),
+                                            ],
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.all(4),
+                                        child: Text(
+                                          '6 Hari',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            // CAROUSEL 3
+                            Container(
+                              margin: EdgeInsets.only(right: 10),
+                              padding: EdgeInsets.all(12),
+                              width: 212,
+                              height: 85,
+                              decoration: BoxDecoration(
+                                image: const DecorationImage(
+                                  image: AssetImage(
+                                    "assets/images/Recatngle.png",
+                                  ),
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Padding(padding: EdgeInsets.only(left: 25)),
+                                  Text(
+                                    'jadwal Perkuliahan',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  Spacer(),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.lightbulb,
+                                            size: 14,
+                                            color: Colors.yellow,
+                                          ),
+                                          Text(
+                                            'Semester 4',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.centerLeft,
+                                            end: Alignment.centerRight,
+                                            colors: [
+                                              Color(0xFF1E69DD),
+                                              Color(0xFF57D4D4),
+                                            ],
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            6,
+                                          ),
+                                        ),
+                                        padding: EdgeInsets.all(4),
+                                        child: Text(
+                                          '6 Hari',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 40),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            "Menu Pembayaran",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Icon(Icons.arrow_forward_ios_rounded, size: 16),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      GridView.count(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        children:
+                            menuItems.map((item) {
+                              return Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.blue,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Iconify(
+                                      item['icon'],
+                                      color: Colors.white,
+                                      size: 28,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      item['label'],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }).toList(),
+                      ),
+                      const SizedBox(height: 100),
+                    ],
+                  ),
                 ),
-              );
-            }).toList(),
+              ],
+            ),
           ),
-          const SizedBox(height: 100),
         ],
       ),
     );
   }
+}
+
+class BgClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    const double radius = 40;
+    Path path = Path();
+    path.lineTo(0, size.height - radius);
+    path.quadraticBezierTo(0, size.height, radius, size.height);
+    path.lineTo(size.width - radius, size.height);
+    path.quadraticBezierTo(
+      size.width,
+      size.height,
+      size.width,
+      size.height - radius,
+    );
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }

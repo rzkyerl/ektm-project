@@ -1,3 +1,4 @@
+import 'package:ektm/pages/info_bayar_pages/info_bayar_pages.dart';
 import 'package:ektm/pages/main_wrapper.dart';
 // import 'package:ektm/pages/ektm_pages/barcode_pages.dart';
 // import 'package:ektm/pages/ektm_pages/scanner_pages.dart';
@@ -9,7 +10,6 @@ void main() {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -18,12 +18,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(), // Gunakan Google Fonts di seluruh app
-        scaffoldBackgroundColor: Colors.white, // Opsional: atur background global
+        textTheme:
+            GoogleFonts.poppinsTextTheme(), // Gunakan Google Fonts di seluruh app
+        scaffoldBackgroundColor:
+            Colors.white, // Opsional: atur background global
       ),
-      home: SplashScreen(),
-      routes:  {
-        '/main': (context) => const MainWrapper(), // Tambahkan route untuk MainWrapper
+      home: InfoBayarPages(),
+      routes: {
+        '/main':
+            (context) =>
+                const MainWrapper(), // Tambahkan route untuk MainWrapper
       },
     );
   }
