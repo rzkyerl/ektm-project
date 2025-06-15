@@ -23,6 +23,17 @@ class InfoBayarPages extends StatelessWidget {
     {"label": "Bootcamp", "icon": Mdi.abc},
   ];
 
+  void _launchWhatsApp() async {
+    const phoneNumber = '62895395295511';
+    final message = Uri.encodeComponent("Halo Admin, izin bertanya...");
+    final url = Uri.parse("https://wa.me/$phoneNumber?text=$message");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Tidak bisa membuka WhatsApp';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -420,6 +431,25 @@ class InfoBayarPages extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _navItem(Widget icon, String label, bool isActive) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        IconTheme(
+          data: IconThemeData(color: isActive ? Colors.blue : Colors.grey[400]),
+          child: icon,
+        ),
+        Text(
+          label,
+          style: TextStyle(
+            color: isActive ? Colors.blue : Colors.grey[400],
+            fontSize: 12,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -104,7 +104,7 @@ class _HomePagesState extends State<HomePages> {
             child: ClipPath(
               clipper: BgClipper(),
               child: Container(
-                width: 366,
+                width: double.infinity,
                 height: 498,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
@@ -126,11 +126,10 @@ class _HomePagesState extends State<HomePages> {
           ),
 
           // 3. ISI E-KTM + BADGE
-          Positioned.fill(
-            top: 0,
+          SafeArea(
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              padding: const EdgeInsets.fromLTRB(20, 90, 20, 30),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -941,7 +940,7 @@ class _HomePagesState extends State<HomePages> {
                 child: _navItem(
                   const Iconify(
                     Bx.bxs_id_card,
-                    color: Color.fromARGB(255, 140, 140, 140),
+                    color: Color.fromARGB(255, 157, 178, 206),
                   ),
                   'E-KTM',
                   _selectedIndex == 0,
@@ -957,7 +956,7 @@ class _HomePagesState extends State<HomePages> {
                 child: _navItem(
                   const Iconify(
                     MaterialSymbols.payments_outline_sharp,
-                    color: Color.fromARGB(255, 140, 140, 140),
+                    color: Color.fromARGB(255, 157, 178, 206),
                   ),
                   'Info Bayar',
                   _selectedIndex == 1,
@@ -974,7 +973,7 @@ class _HomePagesState extends State<HomePages> {
                 child: _navItem(
                   const Iconify(
                     MaterialSymbols.receipt_long_outline,
-                    color: Color.fromARGB(255, 140, 140, 140),
+                    color: Color.fromARGB(255, 157, 178, 206),
                   ),
                   'Berita',
                   _selectedIndex == 2,
