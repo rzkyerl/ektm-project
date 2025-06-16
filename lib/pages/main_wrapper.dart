@@ -23,7 +23,7 @@ class _MainWrapperState extends State<MainWrapper> {
   late int _selectedIndex;
 
   final List<Widget> _pages = [
-    HomePages(),
+    HomePages(namaUser: '', kampus: ''),
     InfoBayarPages(),
     // BeritaPages(),
     // ProfilePages(),
@@ -68,11 +68,7 @@ class _MainWrapperState extends State<MainWrapper> {
         },
         backgroundColor: const Color(0xFF1E69DD),
         shape: const CircleBorder(),
-        child: const Iconify(
-          Mdi.line_scan,
-          size: 28,
-          color: Colors.white,
-        ),
+        child: const Iconify(Mdi.line_scan, size: 28, color: Colors.white),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -122,7 +118,10 @@ class _MainWrapperState extends State<MainWrapper> {
                     Text(
                       'Profile',
                       style: TextStyle(
-                        color: _selectedIndex == 3 ? Colors.blue : Colors.grey[300],
+                        color:
+                            _selectedIndex == 3
+                                ? Colors.blue
+                                : Colors.grey[300],
                         fontSize: 12,
                       ),
                     ),

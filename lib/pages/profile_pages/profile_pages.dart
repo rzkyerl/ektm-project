@@ -32,7 +32,10 @@ class _ProfilePagesState extends State<ProfilePages> {
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 366),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -53,7 +56,10 @@ class _ProfilePagesState extends State<ProfilePages> {
                     // Profile label
                     const Text(
                       'Profile',
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                     ),
                     const SizedBox(height: 12),
                     // Profile section
@@ -65,7 +71,9 @@ class _ProfilePagesState extends State<ProfilePages> {
                           children: [
                             const CircleAvatar(
                               radius: 36,
-                              backgroundImage: AssetImage('assets/images/profile.png'),
+                              backgroundImage: AssetImage(
+                                'assets/images/profile.png',
+                              ),
                             ),
                             Container(
                               decoration: const BoxDecoration(
@@ -88,12 +96,18 @@ class _ProfilePagesState extends State<ProfilePages> {
                             children: const [
                               Text(
                                 "Nihat Hasannanto",
-                                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                               SizedBox(height: 2),
                               Text(
                                 "19230211",
-                                style: TextStyle(color: Colors.grey, fontSize: 13),
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 13,
+                                ),
                               ),
                             ],
                           ),
@@ -112,7 +126,11 @@ class _ProfilePagesState extends State<ProfilePages> {
                             ],
                           ),
                           child: IconButton(
-                            icon: const Iconify(MaterialSymbols.edit_square_outline, color: Colors.black, size: 20),
+                            icon: const Iconify(
+                              MaterialSymbols.edit_square_outline,
+                              color: Colors.black,
+                              size: 20,
+                            ),
                             onPressed: () {},
                           ),
                         ),
@@ -120,7 +138,13 @@ class _ProfilePagesState extends State<ProfilePages> {
                     ),
                     const SizedBox(height: 28),
                     // Mode Layar
-                    const Text("Mode Layar", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    const Text(
+                      "Mode Layar",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     Container(
                       decoration: BoxDecoration(
@@ -130,19 +154,35 @@ class _ProfilePagesState extends State<ProfilePages> {
                       child: Column(
                         children: [
                           InkWell(
-                            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                            borderRadius: const BorderRadius.vertical(
+                              top: Radius.circular(16),
+                            ),
                             onTap: () => setState(() => isLightMode = true),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 8,
+                              ),
                               decoration: BoxDecoration(
-                                color: isLightMode ? Colors.blue.withOpacity(0.08) : Colors.transparent,
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                                color:
+                                    isLightMode
+                                        ? Colors.blue.withOpacity(0.08)
+                                        : Colors.transparent,
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(16),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Iconify(MaterialSymbols.light_mode, size: 20),
+                                  const Iconify(
+                                    MaterialSymbols.light_mode,
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 10),
-                                  const Text("Light Mode", style: TextStyle(fontSize: 15)),
+                                  const Text(
+                                    "Light Mode",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                   const Spacer(),
                                   Radio<bool>(
                                     value: true,
@@ -159,19 +199,35 @@ class _ProfilePagesState extends State<ProfilePages> {
                             ),
                           ),
                           InkWell(
-                            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                            borderRadius: const BorderRadius.vertical(
+                              bottom: Radius.circular(16),
+                            ),
                             onTap: () => setState(() => isLightMode = false),
                             child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 10,
+                                horizontal: 8,
+                              ),
                               decoration: BoxDecoration(
-                                color: !isLightMode ? Colors.blue.withOpacity(0.08) : Colors.transparent,
-                                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(16)),
+                                color:
+                                    !isLightMode
+                                        ? Colors.blue.withOpacity(0.08)
+                                        : Colors.transparent,
+                                borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(16),
+                                ),
                               ),
                               child: Row(
                                 children: [
-                                  const Iconify(MaterialSymbols.dark_mode, size: 20),
+                                  const Iconify(
+                                    MaterialSymbols.dark_mode,
+                                    size: 20,
+                                  ),
                                   const SizedBox(width: 10),
-                                  const Text("Dark Mode", style: TextStyle(fontSize: 15)),
+                                  const Text(
+                                    "Dark Mode",
+                                    style: TextStyle(fontSize: 15),
+                                  ),
                                   const Spacer(),
                                   Radio<bool>(
                                     value: false,
@@ -192,16 +248,36 @@ class _ProfilePagesState extends State<ProfilePages> {
                     ),
                     const SizedBox(height: 28),
                     // Menu Lainnya
-                    const Text("Menu Lainnya", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                    const Text(
+                      "Menu Lainnya",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
                     const SizedBox(height: 12),
-                    _menuItem(icon: Mdi.school_outline, label: "Kampus UBSI", onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const KampusUBSIPages()),
-                      );
-                    }),
-                    _menuItem(icon: Mdi.file_document_outline, label: "Syarat dan Ketentuan", onTap: () {}),
-                    _menuItem(icon: Mdi.information_outline, label: "Tentang BSI.ID", onTap: () {}),
+                    _menuItem(
+                      icon: Mdi.school_outline,
+                      label: "Kampus UBSI",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const KampusUBSIPages(),
+                          ),
+                        );
+                      },
+                    ),
+                    _menuItem(
+                      icon: Mdi.file_document_outline,
+                      label: "Syarat dan Ketentuan",
+                      onTap: () {},
+                    ),
+                    _menuItem(
+                      icon: Mdi.information_outline,
+                      label: "Tentang BSI.ID",
+                      onTap: () {},
+                    ),
                     const SizedBox(height: 8),
                     // Logout
                     InkWell(
@@ -216,7 +292,10 @@ class _ProfilePagesState extends State<ProfilePages> {
                                 color: Colors.transparent,
                                 child: Container(
                                   width: 320,
-                                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24,
+                                    vertical: 24,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(20),
@@ -231,11 +310,18 @@ class _ProfilePagesState extends State<ProfilePages> {
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      const Iconify(MaterialSymbols.logout, color: Colors.red, size: 48),
+                                      const Iconify(
+                                        MaterialSymbols.logout,
+                                        color: Colors.red,
+                                        size: 48,
+                                      ),
                                       const SizedBox(height: 18),
                                       const Text(
                                         'Apakah Anda yakin ingin Logout?',
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
                                         textAlign: TextAlign.center,
                                       ),
                                       const SizedBox(height: 28),
@@ -243,15 +329,32 @@ class _ProfilePagesState extends State<ProfilePages> {
                                         children: [
                                           Expanded(
                                             child: OutlinedButton(
-                                              onPressed: () => Navigator.of(context).pop(),
+                                              onPressed:
+                                                  () =>
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(),
                                               style: OutlinedButton.styleFrom(
                                                 foregroundColor: Colors.black,
-                                                side: const BorderSide(color: Colors.black),
+                                                side: const BorderSide(
+                                                  color: Colors.black,
+                                                ),
                                                 backgroundColor: Colors.white,
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                    ),
                                               ),
-                                              child: const Text('Tidak', style: TextStyle(fontWeight: FontWeight.bold)),
+                                              child: const Text(
+                                                'Tidak',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                           const SizedBox(width: 16),
@@ -259,18 +362,36 @@ class _ProfilePagesState extends State<ProfilePages> {
                                             child: OutlinedButton(
                                               onPressed: () {
                                                 Navigator.of(context).pop();
-                                                Navigator.of(context).pushReplacement(
-                                                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                                                Navigator.of(
+                                                  context,
+                                                ).pushReplacement(
+                                                  MaterialPageRoute(
+                                                    builder:
+                                                        (_) => LoginScreen(),
+                                                  ),
                                                 );
                                               },
                                               style: OutlinedButton.styleFrom(
                                                 foregroundColor: Colors.white,
                                                 backgroundColor: Colors.blue,
-                                                side: const BorderSide(color: Colors.black),
-                                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                                side: const BorderSide(
+                                                  color: Colors.black,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                      vertical: 12,
+                                                    ),
                                               ),
-                                              child: const Text('Iya', style: TextStyle(fontWeight: FontWeight.bold)),
+                                              child: const Text(
+                                                'Iya',
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -284,12 +405,25 @@ class _ProfilePagesState extends State<ProfilePages> {
                         );
                       },
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 0,
+                        ),
                         child: Row(
                           children: const [
-                            Iconify(MaterialSymbols.logout, color: Colors.red, size: 20),
+                            Iconify(
+                              MaterialSymbols.logout,
+                              color: Colors.red,
+                              size: 20,
+                            ),
                             SizedBox(width: 10),
-                            Text("Logout", style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                            Text(
+                              "Logout",
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -332,7 +466,11 @@ class _ProfilePagesState extends State<ProfilePages> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePages()),
+                    MaterialPageRoute(
+                      builder:
+                          (context) =>
+                              const HomePages(namaUser: '', kampus: ''),
+                    ),
                   );
                 },
                 child: _navItem(
@@ -365,7 +503,9 @@ class _ProfilePagesState extends State<ProfilePages> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => const BeritaPages()),
+                    MaterialPageRoute(
+                      builder: (context) => const BeritaPages(),
+                    ),
                   );
                 },
                 child: _navItem(
@@ -390,7 +530,10 @@ class _ProfilePagesState extends State<ProfilePages> {
                     Text(
                       'Profile',
                       style: TextStyle(
-                        color: _selectedIndex == 3 ? Colors.blue : Colors.grey[300],
+                        color:
+                            _selectedIndex == 3
+                                ? Colors.blue
+                                : Colors.grey[300],
                         fontSize: 12,
                       ),
                     ),
@@ -423,7 +566,11 @@ class _ProfilePagesState extends State<ProfilePages> {
     );
   }
 
-  Widget _menuItem({required String icon, required String label, required VoidCallback onTap}) {
+  Widget _menuItem({
+    required String icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
     return InkWell(
       borderRadius: BorderRadius.circular(12),
       onTap: onTap,

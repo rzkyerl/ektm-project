@@ -11,8 +11,9 @@ import 'notification_pages.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePages extends StatefulWidget {
-  const HomePages({super.key});
-
+  final String namaUser;
+  final String kampus;
+  const HomePages({super.key, required this.namaUser, required this.kampus});
   @override
   State<HomePages> createState() => _HomePagesState();
 }
@@ -60,12 +61,20 @@ class _HomePagesState extends State<HomePages> {
                   ),
                   onPressed: () async {
                     debugPrint("Support Agent diklik");
-                    const phoneNumber = '62895395295511'; // Nomor WhatsApp admin (tanpa +)
-                    final message = Uri.encodeComponent("Halo Admin, izin bertanya...");
-                    final url = Uri.parse("https://wa.me/$phoneNumber?text=$message");
+                    const phoneNumber =
+                        '62895395295511'; // Nomor WhatsApp admin (tanpa +)
+                    final message = Uri.encodeComponent(
+                      "Halo Admin, izin bertanya...",
+                    );
+                    final url = Uri.parse(
+                      "https://wa.me/$phoneNumber?text=$message",
+                    );
 
                     if (await canLaunchUrl(url)) {
-                      await launchUrl(url, mode: LaunchMode.externalApplication);
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
                     } else {
                       throw 'Tidak bisa membuka WhatsApp';
                     }
@@ -133,9 +142,9 @@ class _HomePagesState extends State<HomePages> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Welcome, Nihat!',
-                    style: TextStyle(
+                  Text(
+                    'Welcome, ${widget.namaUser}!',
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       color: Colors.white,
@@ -143,11 +152,11 @@ class _HomePagesState extends State<HomePages> {
                   ),
                   const SizedBox(height: 6),
                   Row(
-                    children: const [
+                    children: [
                       Icon(Icons.location_pin, color: Colors.blue, size: 20),
                       SizedBox(width: 4),
                       Text(
-                        'UBSI Slipi, Jakarta Barat',
+                        '${widget.kampus}!',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -906,11 +915,13 @@ class _HomePagesState extends State<HomePages> {
       ),
 
       // 4. FLOATING SCAN QR BUTTON
-      extendBody: true,  
+      extendBody: true,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,MaterialPageRoute(builder: (context) => ScannerPages()),
-                   );
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => ScannerPages()),
+          );
         },
         backgroundColor: const Color(0xFF1E69DD),
         elevation: 0,
@@ -932,10 +943,12 @@ class _HomePagesState extends State<HomePages> {
             children: [
               GestureDetector(
                 onTap: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => HomePages()),
-                   );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HomePages(namaUser: '', kampus: ''),
+                    ),
+                  );
                 },
                 child: _navItem(
                   const Iconify(
@@ -948,10 +961,10 @@ class _HomePagesState extends State<HomePages> {
               ),
               GestureDetector(
                 onTap: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => InfoBayarPages()),
-                   );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => InfoBayarPages()),
+                  );
                 },
                 child: _navItem(
                   const Iconify(
@@ -965,10 +978,10 @@ class _HomePagesState extends State<HomePages> {
               const SizedBox(width: 40),
               GestureDetector(
                 onTap: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => BeritaPages()),
-                   );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => BeritaPages()),
+                  );
                 },
                 child: _navItem(
                   const Iconify(
@@ -981,10 +994,10 @@ class _HomePagesState extends State<HomePages> {
               ),
               GestureDetector(
                 onTap: () {
-                   Navigator.push(
-                     context,
-                     MaterialPageRoute(builder: (context) => ProfilePages()),
-                   );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePages()),
+                  );
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
