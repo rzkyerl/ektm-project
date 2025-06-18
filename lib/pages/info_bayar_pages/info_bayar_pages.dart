@@ -1,41 +1,77 @@
 import 'package:ektm/pages/ektm_pages/notification_pages.dart';
+import 'package:ektm/pages/info_bayar_pages/biaya_kuliah.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class InfoBayarPages extends StatelessWidget {
-  InfoBayarPages({super.key});
+class InfoBayarPages extends StatefulWidget {
+  final int? mahasiswaId;
+  const InfoBayarPages({super.key, this.mahasiswaId});
 
-  final List<Map<String, dynamic>> menuItems = [
-    {"label": "Biaya Kuliah", "icon": MaterialSymbols.attach_money},
-    {"label": "Cuti Akademik", "icon": MaterialSymbols.event_busy},
-    {"label": "Mutasi", "icon": Mdi.swap_horizontal},
-    {"label": "Kegiatan", "icon": Mdi.run},
-    {"label": "Seminar", "icon": Mdi.school},
-    {"label": "Bootcamp", "icon": Mdi.laptop},
-    {"label": "Bootcamp", "icon": Mdi.airline_seat_legroom_normal},
-    {"label": "Bootcamp", "icon": Mdi.account_group},
-    {"label": "Bootcamp", "icon": Mdi.access_point_plus},
-    {"label": "Bootcamp", "icon": Mdi.phone},
-    {"label": "Bootcamp", "icon": Mdi.book},
-    {"label": "Bootcamp", "icon": Mdi.abc},
-  ];
+  @override
+  State<InfoBayarPages> createState() => _InfoBayarPagesState();
+}
 
-  void _launchWhatsApp() async {
-    const phoneNumber = '62895395295511';
-    final message = Uri.encodeComponent("Halo Admin, izin bertanya...");
-    final url = Uri.parse("https://wa.me/$phoneNumber?text=$message");
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
+class _InfoBayarPagesState extends State<InfoBayarPages> {
+  int? mahasiswaId;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadMahasiswaId();
+  }
+
+  Future<void> _loadMahasiswaId() async {
+    if (widget.mahasiswaId != null) {
+      setState(() {
+        mahasiswaId = widget.mahasiswaId;
+      });
     } else {
-      throw 'Tidak bisa membuka WhatsApp';
+      final prefs = await SharedPreferences.getInstance();
+      setState(() {
+        mahasiswaId = prefs.getInt('mahasiswaId') ?? 0;
+      });
     }
   }
 
   @override
+  // lanjut ke UI body-nya...
+  @override
   Widget build(BuildContext context) {
+    if (mahasiswaId == null || mahasiswaId == 0) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    final List<Map<String, dynamic>> menuItems = [
+      {
+        "label": "Biaya Kuliah",
+        "icon": MaterialSymbols.attach_money,
+        "route": (context) {
+          if (mahasiswaId != null) {
+            return BiayaKuliahPage(mahasiswaId: mahasiswaId!);
+          } else {
+            return const Scaffold(
+              body: Center(child: Text('Mahasiswa ID tidak ditemukan')),
+            );
+          }
+        },
+      },
+      {"label": "Cuti Akademik", "icon": MaterialSymbols.event_busy},
+      {"label": "Mutasi", "icon": Mdi.swap_horizontal},
+      {"label": "Kegiatan", "icon": Mdi.run},
+      {"label": "Seminar", "icon": Mdi.school},
+      {"label": "Bootcamp", "icon": Mdi.laptop},
+      {"label": "Bootcamp", "icon": Mdi.airline_seat_legroom_normal},
+      {"label": "Bootcamp", "icon": Mdi.account_group},
+      {"label": "Bootcamp", "icon": Mdi.access_point_plus},
+      {"label": "Bootcamp", "icon": Mdi.phone},
+      {"label": "Bootcamp", "icon": Mdi.book},
+      {"label": "Bootcamp", "icon": Mdi.abc},
+      // Tambahkan menu lainnya...
+    ];
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -394,30 +430,43 @@ class InfoBayarPages extends StatelessWidget {
                         crossAxisSpacing: 16,
                         children:
                             menuItems.map((item) {
-                              return Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: Colors.blue,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Iconify(
-                                      item['icon'],
-                                      color: Colors.white,
-                                      size: 28,
+                              return InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) => item['route'](
+                                            context,
+                                          ), // <--- panggil fungsi
                                     ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      item['label'],
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Iconify(
+                                        item['icon'],
                                         color: Colors.white,
-                                        fontSize: 12,
+                                        size: 28,
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        item['label'],
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               );
                             }).toList(),

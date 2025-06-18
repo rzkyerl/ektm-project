@@ -9,6 +9,7 @@ import 'package:ektm/pages/info_bayar_pages/info_bayar_pages.dart';
 import 'package:ektm/pages/berita_pages/berita_pages.dart';
 import 'package:ektm/pages/profile_pages/kampus_ubsi.dart';
 import 'package:ektm/pages/ektm_pages/scanner_pages.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePages extends StatefulWidget {
   const ProfilePages({super.key});
@@ -20,6 +21,24 @@ class ProfilePages extends StatefulWidget {
 class _ProfilePagesState extends State<ProfilePages> {
   bool isLightMode = true;
   int _selectedIndex = 4;
+
+  // Variabel disimpan di State karena akan diubah
+  String nama = '';
+  String nim = '';
+
+  @override
+  void initState() {
+    super.initState();
+    getMahasiswaProfile();
+  }
+
+  Future<void> getMahasiswaProfile() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nama = prefs.getString('namaUser') ?? '';
+      nim = prefs.getString('nim') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +112,9 @@ class _ProfilePagesState extends State<ProfilePages> {
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: const [
+                            children: [
                               Text(
-                                "Nihat Hasannanto",
+                                nama,
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
@@ -103,7 +122,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                               ),
                               SizedBox(height: 2),
                               Text(
-                                "19230211",
+                                nim,
                                 style: TextStyle(
                                   color: Colors.grey,
                                   fontSize: 13,
@@ -466,11 +485,7 @@ class _ProfilePagesState extends State<ProfilePages> {
                 onTap: () {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) =>
-                              const HomePages(namaUser: '', kampus: ''),
-                    ),
+                    MaterialPageRoute(builder: (context) => const HomePages()),
                   );
                 },
                 child: _navItem(

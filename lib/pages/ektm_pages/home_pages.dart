@@ -7,13 +7,13 @@ import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
 import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/bx.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'notification_pages.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomePages extends StatefulWidget {
-  final String namaUser;
-  final String kampus;
-  const HomePages({super.key, required this.namaUser, required this.kampus});
+  const HomePages({super.key});
+
   @override
   State<HomePages> createState() => _HomePagesState();
 }
@@ -21,14 +21,39 @@ class HomePages extends StatefulWidget {
 class _HomePagesState extends State<HomePages> {
   int _selectedIndex = 0;
 
-  // final List<Widget> _pages = [
-  //   HomePages(),
-  //   InfoBayarPages(),
-  //   BeritaPages(),
-  //   ProfilePages(),
-  // ];
+  int mahasiswaId = 0;
+  String namaUser = '';
+  String kampus = '';
+  String email = '';
+  String nim = '';
+  String password = '';
+  String kelas = ' ';
+  String phone = '';
+  String fakultas = '';
+  String jurusan = '';
 
-  // ignore: unused_element
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      mahasiswaId = prefs.getInt('mahasiswaId') ?? 0; // <- ambil ID
+      namaUser = prefs.getString('namaUser') ?? 'User';
+      kampus = prefs.getString('kampus') ?? '-';
+      email = prefs.getString('email') ?? '-';
+      nim = prefs.getString('nim') ?? '-';
+      password = prefs.getString('password') ?? '-';
+      kelas = prefs.getString('kelas') ?? '-';
+      phone = prefs.getString('phone') ?? '-';
+      fakultas = prefs.getString('fakultas') ?? '-';
+      jurusan = prefs.getString('jurusan') ?? '-';
+    });
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -143,7 +168,7 @@ class _HomePagesState extends State<HomePages> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Welcome, ${widget.namaUser}!',
+                    'Welcome, $namaUser!',
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -156,7 +181,7 @@ class _HomePagesState extends State<HomePages> {
                       Icon(Icons.location_pin, color: Colors.blue, size: 20),
                       SizedBox(width: 4),
                       Text(
-                        '${widget.kampus}!',
+                        '$kampus!',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -187,16 +212,16 @@ class _HomePagesState extends State<HomePages> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Nihat Hasananto',
+                            Text(
+                              '$namaUser',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
-                            const Text(
-                              '19230759 - 19.4A.26',
+                            Text(
+                              '$nim - $kelas',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
@@ -206,8 +231,8 @@ class _HomePagesState extends State<HomePages> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'S1 - SISTEM INFORMASI',
+                                Text(
+                                  'S1 - $jurusan',
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -442,7 +467,7 @@ class _HomePagesState extends State<HomePages> {
                           height: 85,
                           decoration: BoxDecoration(
                             image: const DecorationImage(
-                              image: AssetImage("assets/images/Recatngle.png"),
+                              image: AssetImage("assets/images/Rectangle.png"),
                               fit: BoxFit.fill,
                             ),
                             borderRadius: BorderRadius.circular(12),
@@ -588,7 +613,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Nihat Hasannto",
+                                    "$namaUser",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -629,7 +654,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "19230000",
+                                    "$nim",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -670,7 +695,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "19.4A.26",
+                                    "$kelas",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -711,7 +736,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "087800010001",
+                                    "$phone",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -752,7 +777,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "nihat12@gmail.com",
+                                    "$email",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -811,7 +836,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Fakultas Teknik dan Informatika",
+                                    "$fakultas",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -853,7 +878,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Sistem Informasi",
+                                    "$jurusan",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -892,7 +917,7 @@ class _HomePagesState extends State<HomePages> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "UBSI Slipi",
+                                    "$kampus",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
@@ -945,9 +970,7 @@ class _HomePagesState extends State<HomePages> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(
-                      builder: (context) => HomePages(namaUser: '', kampus: ''),
-                    ),
+                    MaterialPageRoute(builder: (context) => HomePages()),
                   );
                 },
                 child: _navItem(

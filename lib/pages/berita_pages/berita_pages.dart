@@ -99,13 +99,7 @@ class _BeritaPagesState extends State<BeritaPages> {
                   setState(() {
                     _selectedIndex = 0;
                   });
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => HomePages(namaUser: '', kampus: ' '),
-                    ),
-                  );
+                  Navigator.pop(context);
                 },
                 child: _navItem(
                   const Iconify(
@@ -233,9 +227,7 @@ class _BeritaPagesState extends State<BeritaPages> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) =>
-                                          HomePages(namaUser: '', kampus: ''),
+                                  builder: (context) => HomePages(),
                                 ),
                               );
                             },
