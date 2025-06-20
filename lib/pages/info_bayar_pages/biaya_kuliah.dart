@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:ektm/services/api_service.dart';
 import 'package:ektm/services/snap_bayar_pages.dart';
-import 'package:ektm/services/webview_snap.dart';
 import 'package:flutter/material.dart';
-import 'package:http/browser_client.dart' as http;
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -53,10 +51,9 @@ class _BiayaKuliahPageState extends State<BiayaKuliahPage> {
       final url = Uri.parse(
         '${ApiService.baseUrl}/api/get-payment/$mahasiswaId',
       );
-      final client = http.BrowserClient();
 
       try {
-        final response = await client.get(
+        final response = await http.get(
           url,
           headers: {
             'Accept': 'application/json',
@@ -77,8 +74,6 @@ class _BiayaKuliahPageState extends State<BiayaKuliahPage> {
         }
       } catch (e) {
         print('HTTP ERROR: $e');
-      } finally {
-        client.close();
       }
     }
   }

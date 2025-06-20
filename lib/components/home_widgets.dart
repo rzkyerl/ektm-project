@@ -1,62 +1,48 @@
-import 'package:ektm/pages/berita_pages/berita_pages.dart';
-import 'package:ektm/pages/info_bayar_pages/info_bayar_pages.dart';
-import 'package:ektm/pages/profile_pages/profile_pages.dart';
-import 'package:ektm/pages/ektm_pages/scanner_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:iconify_flutter/iconify_flutter.dart';
 import 'package:iconify_flutter/icons/material_symbols.dart';
-import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:iconify_flutter/icons/bx.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'notification_pages.dart';
+import 'package:iconify_flutter/icons/mdi.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HomePages extends StatefulWidget {
-  const HomePages({super.key});
+// Data class untuk menyimpan data user
+class UserData {
+  int mahasiswaId;
+  String namaUser;
+  String kampus;
+  String email;
+  String nim;
+  String password;
+  String kelas;
+  String phone;
+  String fakultas;
+  String jurusan;
 
-  @override
-  State<HomePages> createState() => _HomePagesState();
+  UserData({
+    this.mahasiswaId = 0,
+    this.namaUser = 'User',
+    this.kampus = '-',
+    this.email = '-',
+    this.nim = '-',
+    this.password = '-',
+    this.kelas = '-',
+    this.phone = '-',
+    this.fakultas = '-',
+    this.jurusan = '-',
+  });
 }
 
-class _HomePagesState extends State<HomePages> {
-  int _selectedIndex = 0;
-  late UserData _userData;
+// Widget untuk App Bar
+class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final VoidCallback onNotificationPressed;
 
-  @override
-  void initState() {
-    super.initState();
-    _userData = UserData();
-    _loadUserData();
-  }
-
-  Future<void> _loadUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _userData = UserData.fromSharedPreferences(prefs);
-    });
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
+  const HomeAppBar({
+    super.key,
+    required this.onNotificationPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      extendBodyBehindAppBar: true,
-      appBar: _buildAppBar(),
-      body: _buildBody(),
-      extendBody: true,
-      floatingActionButton: _buildFloatingActionButton(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: _buildBottomNavigationBar(),
-    );
-  }
-
-  PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -93,14 +79,7 @@ class _HomePagesState extends State<HomePages> {
         MaterialSymbols.notifications,
         color: Colors.white,
       ),
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const NotificationPages(),
-          ),
-        );
-      },
+      onPressed: onNotificationPressed,
     );
   }
 
@@ -116,33 +95,16 @@ class _HomePagesState extends State<HomePages> {
     }
   }
 
-  Widget _buildBody() {
-    return Stack(
-      children: [
-        _buildBackground(),
-        SafeArea(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 90),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildWelcomeSection(),
-                const SizedBox(height: 35),
-                _buildEktmCard(),
-                const SizedBox(height: 30),
-                _buildKegiatanSection(),
-                const SizedBox(height: 20),
-                _buildDataMahasiswaSection(),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+  @override
+  Size get preferredSize => const Size.fromHeight(45);
+}
 
-  Widget _buildBackground() {
+// Widget untuk Background
+class HomeBackground extends StatelessWidget {
+  const HomeBackground({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Positioned(
       top: 0,
       right: 0,
@@ -166,13 +128,24 @@ class _HomePagesState extends State<HomePages> {
       ),
     );
   }
+}
 
-  Widget _buildWelcomeSection() {
+// Widget untuk Welcome Section
+class WelcomeSection extends StatelessWidget {
+  final UserData userData;
+
+  const WelcomeSection({
+    super.key,
+    required this.userData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Welcome, ${_userData.namaUser}!',
+          'Welcome, ${userData.namaUser}!',
           style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.w600,
@@ -185,7 +158,7 @@ class _HomePagesState extends State<HomePages> {
             const Icon(Icons.location_pin, color: Colors.blue, size: 20),
             const SizedBox(width: 4),
             Text(
-              '${_userData.kampus}!',
+              '${userData.kampus}!',
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -197,8 +170,19 @@ class _HomePagesState extends State<HomePages> {
       ],
     );
   }
+}
 
-  Widget _buildEktmCard() {
+// Widget untuk E-KTM Card
+class EktmCard extends StatelessWidget {
+  final UserData userData;
+
+  const EktmCard({
+    super.key,
+    required this.userData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Stack(
       children: [
         Container(
@@ -221,7 +205,7 @@ class _HomePagesState extends State<HomePages> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _userData.namaUser,
+                userData.namaUser,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 20,
@@ -229,7 +213,7 @@ class _HomePagesState extends State<HomePages> {
                 ),
               ),
               Text(
-                '${_userData.nim} - ${_userData.kelas}',
+                '${userData.nim} - ${userData.kelas}',
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 12,
@@ -240,7 +224,7 @@ class _HomePagesState extends State<HomePages> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'S1 - ${_userData.jurusan}',
+                    'S1 - ${userData.jurusan}',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.white,
@@ -260,12 +244,18 @@ class _HomePagesState extends State<HomePages> {
             ],
           ),
         ),
-        _buildLunasBadge(),
+        const LunasBadge(),
       ],
     );
   }
+}
 
-  Widget _buildLunasBadge() {
+// Widget untuk Badge Lunas
+class LunasBadge extends StatelessWidget {
+  const LunasBadge({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Positioned(
       top: 0,
       right: 0,
@@ -299,8 +289,14 @@ class _HomePagesState extends State<HomePages> {
       ),
     );
   }
+}
 
-  Widget _buildKegiatanSection() {
+// Widget untuk Kegiatan Section
+class KegiatanSection extends StatelessWidget {
+  const KegiatanSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -322,49 +318,58 @@ class _HomePagesState extends State<HomePages> {
           ],
         ),
         const SizedBox(height: 15),
-        _buildKegiatanCarousel(),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              KegiatanCard(
+                imagePath: "assets/images/Rectangle.png",
+                title: "jadwal Perkuliahan",
+                subtitle: "Semester 4",
+                duration: "6 Hari",
+                gradientColors: const [Color(0xFF1E69DD), Color(0xFF57D4D4)],
+              ),
+              KegiatanCard(
+                imagePath: "assets/images/Rectangle2.png",
+                title: "Kalender Akademik",
+                subtitle: "Universitas BSI",
+                duration: "6 Hari",
+                gradientColors: const [Color(0xFF57D4D4), Color(0xFF1E69DD)],
+              ),
+              KegiatanCard(
+                imagePath: "assets/images/Rectangle.png",
+                title: "jadwal Perkuliahan",
+                subtitle: "Semester 4",
+                duration: "6 Hari",
+                gradientColors: const [Color(0xFF1E69DD), Color(0xFF57D4D4)],
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
+}
 
-  Widget _buildKegiatanCarousel() {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        children: [
-          _buildKegiatanCard(
-            "assets/images/Rectangle.png",
-            "jadwal Perkuliahan",
-            "Semester 4",
-            "6 Hari",
-            const [Color(0xFF1E69DD), Color(0xFF57D4D4)],
-          ),
-          _buildKegiatanCard(
-            "assets/images/Rectangle2.png",
-            "Kalender Akademik",
-            "Universitas BSI",
-            "6 Hari",
-            const [Color(0xFF57D4D4), Color(0xFF1E69DD)],
-          ),
-          _buildKegiatanCard(
-            "assets/images/Rectangle.png",
-            "jadwal Perkuliahan",
-            "Semester 4",
-            "6 Hari",
-            const [Color(0xFF1E69DD), Color(0xFF57D4D4)],
-          ),
-        ],
-      ),
-    );
-  }
+// Widget untuk Kegiatan Card
+class KegiatanCard extends StatelessWidget {
+  final String imagePath;
+  final String title;
+  final String subtitle;
+  final String duration;
+  final List<Color> gradientColors;
 
-  Widget _buildKegiatanCard(
-    String imagePath,
-    String title,
-    String subtitle,
-    String duration,
-    List<Color> gradientColors,
-  ) {
+  const KegiatanCard({
+    super.key,
+    required this.imagePath,
+    required this.title,
+    required this.subtitle,
+    required this.duration,
+    required this.gradientColors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(right: 10),
       padding: const EdgeInsets.all(12),
@@ -433,8 +438,19 @@ class _HomePagesState extends State<HomePages> {
       ),
     );
   }
+}
 
-  Widget _buildDataMahasiswaSection() {
+// Widget untuk Data Mahasiswa Section
+class DataMahasiswaSection extends StatelessWidget {
+  final UserData userData;
+
+  const DataMahasiswaSection({
+    super.key,
+    required this.userData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -474,14 +490,25 @@ class _HomePagesState extends State<HomePages> {
           ],
         ),
         const SizedBox(height: 10),
-        _buildDataPersonalCard(),
+        DataPersonalCard(userData: userData),
         const SizedBox(height: 20),
-        _buildDataAkademikCard(),
+        DataAkademikCard(userData: userData),
       ],
     );
   }
+}
 
-  Widget _buildDataPersonalCard() {
+// Widget untuk Data Personal Card
+class DataPersonalCard extends StatelessWidget {
+  final UserData userData;
+
+  const DataPersonalCard({
+    super.key,
+    required this.userData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -502,19 +529,30 @@ class _HomePagesState extends State<HomePages> {
           ),
           child: Column(
             children: [
-              _buildDataRow(Icons.person, "Nama Lengkap", _userData.namaUser),
-              _buildDataRow(Icons.view_list_rounded, "Nomor Induk Mahasiswa", _userData.nim),
-              _buildDataRow(Icons.door_front_door, "Kelas", _userData.kelas),
-              _buildDataRow(Icons.phone_android_rounded, "Phone", _userData.phone),
-              _buildDataRow(Icons.email_outlined, "Email", _userData.email),
+              DataRow(Icons.person, "Nama Lengkap", userData.namaUser),
+              DataRow(Icons.view_list_rounded, "Nomor Induk Mahasiswa", userData.nim),
+              DataRow(Icons.door_front_door, "Kelas", userData.kelas),
+              DataRow(Icons.phone_android_rounded, "Phone", userData.phone),
+              DataRow(Icons.email_outlined, "Email", userData.email),
             ],
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildDataAkademikCard() {
+// Widget untuk Data Akademik Card
+class DataAkademikCard extends StatelessWidget {
+  final UserData userData;
+
+  const DataAkademikCard({
+    super.key,
+    required this.userData,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -535,17 +573,32 @@ class _HomePagesState extends State<HomePages> {
           ),
           child: Column(
             children: [
-              _buildDataRow(Icons.developer_board, "Fakultas", _userData.fakultas),
-              _buildDataRow(Icons.school_rounded, "Jurusan", _userData.jurusan),
-              _buildDataRow(Icons.pin_drop, "Kampus", _userData.kampus),
+              DataRow(Icons.developer_board, "Fakultas", userData.fakultas),
+              DataRow(Icons.school_rounded, "Jurusan", userData.jurusan),
+              DataRow(Icons.pin_drop, "Kampus", userData.kampus),
             ],
           ),
         ),
       ],
     );
   }
+}
 
-  Widget _buildDataRow(IconData icon, String label, String value) {
+// Widget untuk Data Row
+class DataRow extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const DataRow(
+    this.icon,
+    this.label,
+    this.value, {
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -588,23 +641,21 @@ class _HomePagesState extends State<HomePages> {
       ],
     );
   }
+}
 
-  Widget _buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ScannerPages()),
-        );
-      },
-      backgroundColor: const Color(0xFF1E69DD),
-      elevation: 0,
-      shape: const CircleBorder(),
-      child: const Iconify(Mdi.line_scan, size: 28, color: Colors.white),
-    );
-  }
+// Widget untuk Bottom Navigation Bar
+class HomeBottomNavigationBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onItemTapped;
 
-  Widget _buildBottomNavigationBar() {
+  const HomeBottomNavigationBar({
+    super.key,
+    required this.selectedIndex,
+    required this.onItemTapped,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
       notchMargin: 10,
@@ -619,20 +670,17 @@ class _HomePagesState extends State<HomePages> {
               const Iconify(Bx.bxs_id_card, color: Color.fromARGB(255, 157, 178, 206)),
               'E-KTM',
               0,
-              () => Navigator.push(context, MaterialPageRoute(builder: (context) => HomePages())),
             ),
             _buildNavItem(
               const Iconify(MaterialSymbols.payments_outline_sharp, color: Color.fromARGB(255, 157, 178, 206)),
               'Info Bayar',
               1,
-              () => Navigator.push(context, MaterialPageRoute(builder: (context) => InfoBayarPages())),
             ),
             const SizedBox(width: 40),
             _buildNavItem(
               const Iconify(MaterialSymbols.receipt_long_outline, color: Color.fromARGB(255, 157, 178, 206)),
               'Berita',
               2,
-              () => Navigator.push(context, MaterialPageRoute(builder: (context) => BeritaPages())),
             ),
             _buildProfileNavItem(),
           ],
@@ -641,20 +689,20 @@ class _HomePagesState extends State<HomePages> {
     );
   }
 
-  Widget _buildNavItem(Widget icon, String label, int index, VoidCallback onTap) {
+  Widget _buildNavItem(Widget icon, String label, int index) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () => onItemTapped(index),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           IconTheme(
-            data: IconThemeData(color: _selectedIndex == index ? Colors.blue : Colors.grey[400]),
+            data: IconThemeData(color: selectedIndex == index ? Colors.blue : Colors.grey[400]),
             child: icon,
           ),
           Text(
             label,
             style: TextStyle(
-              color: _selectedIndex == index ? Colors.blue : Colors.grey[400],
+              color: selectedIndex == index ? Colors.blue : Colors.grey[400],
               fontSize: 12,
             ),
           ),
@@ -665,12 +713,7 @@ class _HomePagesState extends State<HomePages> {
 
   Widget _buildProfileNavItem() {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfilePages()),
-        );
-      },
+      onTap: () => onItemTapped(3),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -682,54 +725,12 @@ class _HomePagesState extends State<HomePages> {
           Text(
             'Profile',
             style: TextStyle(
-              color: _selectedIndex == 3 ? Colors.blue : Colors.grey[300],
+              color: selectedIndex == 3 ? Colors.blue : Colors.grey[300],
               fontSize: 12,
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-// Data class untuk menyimpan data user
-class UserData {
-  int mahasiswaId;
-  String namaUser;
-  String kampus;
-  String email;
-  String nim;
-  String password;
-  String kelas;
-  String phone;
-  String fakultas;
-  String jurusan;
-
-  UserData({
-    this.mahasiswaId = 0,
-    this.namaUser = 'User',
-    this.kampus = '-',
-    this.email = '-',
-    this.nim = '-',
-    this.password = '-',
-    this.kelas = '-',
-    this.phone = '-',
-    this.fakultas = '-',
-    this.jurusan = '-',
-  });
-
-  factory UserData.fromSharedPreferences(SharedPreferences prefs) {
-    return UserData(
-      mahasiswaId: prefs.getInt('mahasiswaId') ?? 0,
-      namaUser: prefs.getString('namaUser') ?? 'User',
-      kampus: prefs.getString('kampus') ?? '-',
-      email: prefs.getString('email') ?? '-',
-      nim: prefs.getString('nim') ?? '-',
-      password: prefs.getString('password') ?? '-',
-      kelas: prefs.getString('kelas') ?? '-',
-      phone: prefs.getString('phone') ?? '-',
-      fakultas: prefs.getString('fakultas') ?? '-',
-      jurusan: prefs.getString('jurusan') ?? '-',
     );
   }
 }
@@ -770,4 +771,4 @@ class RectangleClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) => false;
-}
+} 

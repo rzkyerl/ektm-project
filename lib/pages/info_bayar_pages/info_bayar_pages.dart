@@ -336,7 +336,7 @@ class _InfoBayarPagesState extends State<InfoBayarPages> {
                               decoration: BoxDecoration(
                                 image: const DecorationImage(
                                   image: AssetImage(
-                                    "assets/images/Recatngle.png",
+                                    "assets/images/Rectangle.png",
                                   ),
                                   fit: BoxFit.fill,
                                 ),

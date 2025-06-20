@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 
 class ApiService {
   static const String baseUrl =
-      "https://fa7e-114-4-215-152.ngrok-free.app"; // base URL
+      "https://27f8-202-10-61-147.ngrok-free.app"; // base URL
 
   static Future<Map<String, dynamic>> loginMahasiswa(
     String nim,
